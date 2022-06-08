@@ -17,3 +17,6 @@ Use SecurityContext in the pod description
 
 Alias for kubectl
 alias k='kubectl'
+
+Exposing a deployment as a service
+k expose deployment nginx --port=8080 --type=LoadBalancer
