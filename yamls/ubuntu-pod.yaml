@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ubuntu
+  name: ubuntu03
+spec:
+  containers:
+  - image: ubuntu
+    name: ubuntu
+    resources: {}
+    command: ["sleep"]
+    args: ["3400"]
+    securityContext:
+      capabilities:
+        add: ["SYS_TIME"]
+    volumeMounts:
+    - name: config
+      mountPath: "/config"
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: config
+    configMap:
+      name: db-config
+status: {}

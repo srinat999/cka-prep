@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-con-01
+  labels:
+    app: deploy-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-1
+  template:
+    metadata:
+      labels:
+        app: deploy-1
+    spec:
+      containers:
+      - name: deploy-1
+        image: ubuntu
+        command: ["sleep"]
+        args: ["5000"]
+        env:
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: db-host
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: db-port
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: db-name
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+        - name: db-secret
+          mountPath: "/db-creds"
+          readOnly: true
+      - image: nginx
+        name: nginx
+        resources: {}
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: db-config
+      - name: db-secret
+        secret:
+          secretName: db-creds

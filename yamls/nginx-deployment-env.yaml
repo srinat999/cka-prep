@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginxx01
+  labels:
+    app: nginxx01
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginxx01
+  template:
+    metadata:
+      labels:
+        app: nginxx01
+    spec:
+      containers:
+      - name: nginxx01
+        image: nginx
+        env:
+        - name: CREATED_BY
+          value: "octocat"
